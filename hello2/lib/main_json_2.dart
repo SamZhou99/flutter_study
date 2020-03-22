@@ -50,6 +50,7 @@ class MainPage extends State<Main> {
           children: <Widget>[
             Image.network(
               '${model.img}',
+              // height: 160,
               width: 60,
             ),
             Expanded(
@@ -74,6 +75,29 @@ class MainPage extends State<Main> {
     );
   }
 
+  void getData(url) async {
+    Map<String, String> map = new Map();
+    map['temp'] = 'temp';
+    print(url);
+    HttpController.get(url, (data) {
+      if (data != null) {
+        final body = json.decode(data.toString());
+        final list = body['list'];
+
+        list.forEach((item) {
+          _item.add(Model(item["id"], item["title"], item["img"], item["type1"],
+              item["video"]));
+        });
+        print(list.length);
+        print(_item.length);
+        setState(() {
+          tempStr = '''
+HI
+''';
+        });
+      }
+    }, params: map);
+  }
 }
 
 class Model {
