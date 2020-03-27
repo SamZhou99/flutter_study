@@ -1,6 +1,5 @@
-import 'dart:convert';
 import 'package:flutter/material.dart';
-import 'package:hello2/common/HttpController.dart';
+import 'dart:math';
 
 class Main extends StatefulWidget {
   @override
@@ -11,13 +10,29 @@ class Main extends StatefulWidget {
 
 class MainPage extends State<Main> {
   String tempStr = 'Loading...';
-  var _item = [];
 
   @override
   void initState() {
     super.initState();
-    getData('http://127.0.0.1:3000/list/1.html/json');
-    // getData('http://www.lajiao999.com/list/1.html/json');
+  }
+
+  @override
+  void dispose() {
+    super.dispose();
+    print('dispost');
+  }
+
+  void onClickBtn() {
+    print('click');
+    int n1 = 10+Random().nextInt(20);
+    int n2 = Random().nextInt(9);
+    int n3 = max(n1, n2);
+    int n4 = min(n1, n2);
+    int n5 = n3 - n4;
+    setState(() {
+      // tempStr = n1.toString() + '+' + n2.toString() + '= ?';
+      tempStr = "${n3.toString()}-${n4.toString()}=${n5.toString()}";
+    });
   }
 
   @override
@@ -25,73 +40,23 @@ class MainPage extends State<Main> {
     return MaterialApp(
         debugShowCheckedModeBanner: false,
         home: Scaffold(
-          body: ListView.builder(
-            itemCount: _item.length,
-            itemBuilder: itemView,
-            shrinkWrap: true,
+          body: Container(
+            color: Colors.teal,
+            child: Center(
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: <Widget>[
+                  Text(
+                    tempStr,
+                    style: TextStyle(fontSize: 40, color: Colors.white),
+                  ),
+                  RaisedButton(child: Text('Click'), onPressed: onClickBtn)
+                ],
+              ),
+            ),
           ),
         ));
   }
-
-  Widget itemView(BuildContext context, int index) {
-    Model model = this._item[index];
-
-    // //设置分割线
-    // if (index.isOdd) {
-    //   return new Divider(height: 2.0);
-    // }
-
-    return Container(
-      color: Color(0xFFee22aa),
-      child: Padding(
-        padding: EdgeInsets.all(10.0),
-        child: Flex(
-          direction: Axis.horizontal,
-          children: <Widget>[
-            Image.network(
-              '${model.img}',
-              width: 60,
-            ),
-            Expanded(
-              child: Text(
-                '\t${model.title}',
-                style: TextStyle(fontSize: 14.0, color: Color(0xFFffffff)),
-                overflow: TextOverflow.ellipsis,
-                maxLines: 1,
-              ),
-            ),
-            Container(
-              child: GestureDetector(
-                child: FlutterLogo(),
-                onTap: () {
-                  print(model.title);
-                },
-              ),
-            )
-          ],
-        ),
-      ),
-    );
-  }
-
-}
-
-class Model {
-  // String _id;
-  int id;
-  String title;
-  String type1;
-  String type2;
-  String img;
-  String link;
-  String source_site;
-  String video;
-  int status;
-  int is_html;
-  String date;
-  String created;
-
-  Model(this.id, this.title, this.img, this.type1, this.video);
 }
 
 void main() {
