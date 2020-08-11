@@ -33,6 +33,37 @@ class MainPage extends State<Main> {
         ));
   }
 
+  void showAlertDialog(BuildContext context, model) {
+    showDialog(
+        context: context,
+        barrierDismissible: true,
+        builder: (BuildContext context) {
+          return AlertDialog(
+            content: Text(model.title),
+            title: Center(
+                child: Text(
+              '标题',
+              style: TextStyle(
+                  color: Colors.black,
+                  fontSize: 20.0,
+                  fontWeight: FontWeight.bold),
+            )),
+            actions: <Widget>[
+              FlatButton(
+                  onPressed: () {
+                    Navigator.of(context).pop();
+                  },
+                  child: Text('确定')),
+              FlatButton(
+                  onPressed: () {
+                    Navigator.of(context).pop();
+                  },
+                  child: Text('取消')),
+            ],
+          );
+        });
+  }
+
   Widget itemView(BuildContext context, int index) {
     Model model = this._item[index];
 
@@ -45,31 +76,30 @@ class MainPage extends State<Main> {
       color: Color(0xFFee22aa),
       child: Padding(
         padding: EdgeInsets.all(10.0),
-        child: Flex(
-          direction: Axis.horizontal,
-          children: <Widget>[
-            Image.network(
-              'http://www.lajiao999.com${model.local_img}',
-              // height: 160,
-              width: 60,
-            ),
-            Expanded(
-              child: Text(
-                '\t${model.title}',
-                style: TextStyle(fontSize: 14.0, color: Color(0xFFffffff)),
-                overflow: TextOverflow.ellipsis,
-                maxLines: 1,
+        child: GestureDetector(
+          child: Flex(
+            direction: Axis.horizontal,
+            children: <Widget>[
+              Image.network(
+                model.img,
+                // height: 160,
+                width: 120,
               ),
-            ),
-            Container(
-              child: GestureDetector(
-                child: FlutterLogo(),
-                onTap: () {
-                  print(model.title);
-                },
+              Expanded(
+                child: Text(
+                  '\t${model.title}',
+                  style: TextStyle(fontSize: 14.0, color: Color(0xFFffffff)),
+                  overflow: TextOverflow.ellipsis,
+                  maxLines: 1,
+                ),
               ),
-            )
-          ],
+            ],
+          ),
+          onTap: () {
+            print(model.title);
+            print(model.video);
+            showAlertDialog(context, model);
+          },
         ),
       ),
     );
