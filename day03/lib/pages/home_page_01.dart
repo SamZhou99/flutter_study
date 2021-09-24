@@ -2,6 +2,7 @@ import 'dart:convert';
 import 'dart:math';
 import 'dart:ui';
 
+import 'package:day03/global.dart';
 import 'package:day03/pages/video_page.dart';
 import 'package:flutter/material.dart';
 import 'package:dio/dio.dart';
@@ -19,7 +20,7 @@ class _HomePage01State extends State<HomePage01> {
   @override
   void initState() {
     super.initState();
-    getHttp('http://192.168.0.107:3000/list/5.html/json');
+    getHttp(Golbal.listUrl);
   }
 
   @override
@@ -58,15 +59,14 @@ class _HomePage01State extends State<HomePage01> {
                     fit: BoxFit.fitHeight,
                   ),
                   onTap: () {
-                    print(itemData["video"]);
                     // showAlertDialog(context, itemData);
-                    Navigator.push(context, MaterialPageRoute(builder: (context)=>VideoPage()));
+                    Golbal.itemData = itemData;
+                    Navigator.push(context, MaterialPageRoute(builder: (context) => VideoPage()));
                   }),
               Positioned(
                 bottom: 0,
                 left: 0,
-                child: Text(itemData['title'],
-                    style: TextStyle(color: Colors.black, fontSize: 14)),
+                child: Text(itemData['title'], style: TextStyle(color: Colors.black, fontSize: 14)),
               )
             ],
           )
@@ -126,6 +126,7 @@ class _HomePage01State extends State<HomePage01> {
     }
   }
 
+  // 对话框
   void showAlertDialog(BuildContext context, model) {
     showDialog(
         context: context,
@@ -136,10 +137,7 @@ class _HomePage01State extends State<HomePage01> {
             title: Center(
                 child: Text(
               '标题',
-              style: TextStyle(
-                  color: Colors.black,
-                  fontSize: 20.0,
-                  fontWeight: FontWeight.bold),
+              style: TextStyle(color: Colors.black, fontSize: 20.0, fontWeight: FontWeight.bold),
             )),
             actions: <Widget>[
               IconButton(
