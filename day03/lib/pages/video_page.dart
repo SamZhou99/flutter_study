@@ -78,18 +78,39 @@ class _VideoPageState extends State<VideoPage> {
           }
         },
       ),
+      // floatingActionButton: FloatingActionButton(
+      // // 播放/暂停 按钮
+      //   onPressed: () {
+      //     setState(() {
+      //       if (_vpc.value.isPlaying) {
+      //         _vpc.pause();
+      //       } else {
+      //         _vpc.play();
+      //       }
+      //     });
+      //   },
+      //   child: Icon(
+      //     _vpc.value.isPlaying ? Icons.pause : Icons.play_arrow,
+      //   ),
+      // ),
+
+      // 快进 按钮
       floatingActionButton: FloatingActionButton(
         onPressed: () {
+          // print('####################################################################');
+          // print(_vpc.value.duration.inSeconds);
+          // print(_vpc.value.position.inSeconds);
+          // print(_vpc.value.duration.inSeconds ~/ 30);
+          // print('####################################################################');
           setState(() {
             if (_vpc.value.isPlaying) {
-              _vpc.pause();
-            } else {
-              _vpc.play();
+              _vpc.seekTo(
+                  Duration(seconds: _vpc.value.position.inSeconds + _vpc.value.duration.inSeconds ~/ 40));
             }
           });
         },
         child: Icon(
-          _vpc.value.isPlaying ? Icons.pause : Icons.play_arrow,
+          Icons.arrow_forward,
         ),
       ),
     );
