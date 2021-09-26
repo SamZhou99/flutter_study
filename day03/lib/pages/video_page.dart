@@ -36,19 +36,44 @@ class _VideoPageState extends State<VideoPage> {
 
   @override
   Widget build(BuildContext context) {
+    print('============================================================');
+    print(_vpc.value);
+    print('============================================================');
     return Scaffold(
       appBar: AppBar(title: Text(Golbal.itemData['title'])),
       body: FutureBuilder(
         future: _initializeVideoPlayerFuture,
         builder: (context, snapshot) {
           if (snapshot.connectionState == ConnectionState.done) {
-            return AspectRatio(
-              aspectRatio: _vpc.value.aspectRatio,
-              child: VideoPlayer(_vpc),
+            return Column(
+              children: [
+                SizedBox(
+                  // height: 232,
+                  height: 400,
+                  child: Container(
+                      color: Colors.black,
+                      child: Center(
+                          child: AspectRatio(
+                        aspectRatio: _vpc.value.aspectRatio,
+                        child: VideoPlayer(_vpc),
+                      ))),
+                ),
+                // Center(
+                //     child: AspectRatio(
+                //   aspectRatio: _vpc.value.aspectRatio,
+                //   child: VideoPlayer(_vpc),
+                // )),
+                Text('点赞'),
+                Text('收藏'),
+                Text('评论'),
+                Text('聊天'),
+              ],
             );
           } else {
             return const Center(
-              child: CircularProgressIndicator(),
+              child: CircularProgressIndicator(
+                  backgroundColor: Colors.greenAccent,
+                  valueColor: AlwaysStoppedAnimation<Color>(Colors.pink)),
             );
           }
         },
