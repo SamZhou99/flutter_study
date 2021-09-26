@@ -36,9 +36,9 @@ class _VideoPageState extends State<VideoPage> {
 
   @override
   Widget build(BuildContext context) {
-    print('============================================================');
-    print(_vpc.value);
-    print('============================================================');
+    // print('============================================================');
+    // print(_vpc.value);
+    // print('============================================================');
     return Scaffold(
       appBar: AppBar(title: Text(Golbal.itemData['title'])),
       body: FutureBuilder(
@@ -67,19 +67,37 @@ class _VideoPageState extends State<VideoPage> {
                 Text('收藏'),
                 Text('评论'),
                 Text('聊天'),
+                ElevatedButton(
+                    onPressed: () {
+                      setState(() {
+                        if (_vpc.value.isPlaying) {
+                          _vpc.seekTo(Duration(seconds: _vpc.value.position.inSeconds + _vpc.value.duration.inSeconds ~/ 10));
+                        }
+                      });
+                    },
+                    child: Text('快进')),
+                ElevatedButton(
+                    onPressed: () {
+                      setState(() {
+                        if (_vpc.value.isPlaying) {
+                          _vpc.pause();
+                        } else {
+                          _vpc.play();
+                        }
+                      });
+                    },
+                    child: Text('播放/暂停')),
               ],
             );
           } else {
             return const Center(
-              child: CircularProgressIndicator(
-                  backgroundColor: Colors.greenAccent,
-                  valueColor: AlwaysStoppedAnimation<Color>(Colors.pink)),
+              child: CircularProgressIndicator(backgroundColor: Colors.greenAccent, valueColor: AlwaysStoppedAnimation<Color>(Colors.pink)),
             );
           }
         },
       ),
       // floatingActionButton: FloatingActionButton(
-      // // 播放/暂停 按钮
+      //   // 播放/暂停 按钮
       //   onPressed: () {
       //     setState(() {
       //       if (_vpc.value.isPlaying) {
@@ -94,25 +112,24 @@ class _VideoPageState extends State<VideoPage> {
       //   ),
       // ),
 
-      // 快进 按钮
-      floatingActionButton: FloatingActionButton(
-        onPressed: () {
-          // print('####################################################################');
-          // print(_vpc.value.duration.inSeconds);
-          // print(_vpc.value.position.inSeconds);
-          // print(_vpc.value.duration.inSeconds ~/ 30);
-          // print('####################################################################');
-          setState(() {
-            if (_vpc.value.isPlaying) {
-              _vpc.seekTo(
-                  Duration(seconds: _vpc.value.position.inSeconds + _vpc.value.duration.inSeconds ~/ 40));
-            }
-          });
-        },
-        child: Icon(
-          Icons.arrow_forward,
-        ),
-      ),
+      // // 快进 按钮
+      // floatingActionButton: FloatingActionButton(
+      //   onPressed: () {
+      //     // print('####################################################################');
+      //     // print(_vpc.value.duration.inSeconds);
+      //     // print(_vpc.value.position.inSeconds);
+      //     // print(_vpc.value.duration.inSeconds ~/ 30);
+      //     // print('####################################################################');
+      //     setState(() {
+      //       if (_vpc.value.isPlaying) {
+      //         _vpc.seekTo(Duration(seconds: _vpc.value.position.inSeconds + _vpc.value.duration.inSeconds ~/ 40));
+      //       }
+      //     });
+      //   },
+      //   child: Icon(
+      //     Icons.arrow_forward,
+      //   ),
+      // ),
     );
   }
 }
