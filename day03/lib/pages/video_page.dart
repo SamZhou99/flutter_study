@@ -1,6 +1,7 @@
 import 'package:day03/global.dart';
 import 'package:flutter/material.dart';
 import 'package:video_player/video_player.dart';
+import 'package:wakelock/wakelock.dart';
 
 class VideoPage extends StatefulWidget {
   const VideoPage({Key? key}) : super(key: key);
@@ -19,6 +20,7 @@ class _VideoPageState extends State<VideoPage> {
     _vpc = VideoPlayerController.network(Golbal.itemData['video']);
     _initializeVideoPlayerFuture = _vpc.initialize();
     _vpc.setLooping(true);
+    Wakelock.enable();
     setState(() {
       if (_vpc.value.isPlaying) {
         _vpc.pause();
@@ -30,6 +32,7 @@ class _VideoPageState extends State<VideoPage> {
 
   @override
   void dispose() {
+    Wakelock.disable();
     _vpc.dispose();
     super.dispose();
   }
@@ -58,11 +61,6 @@ class _VideoPageState extends State<VideoPage> {
                         child: VideoPlayer(_vpc),
                       ))),
                 ),
-                // Center(
-                //     child: AspectRatio(
-                //   aspectRatio: _vpc.value.aspectRatio,
-                //   child: VideoPlayer(_vpc),
-                // )),
                 Text('点赞'),
                 Text('收藏'),
                 Text('评论'),
@@ -96,40 +94,6 @@ class _VideoPageState extends State<VideoPage> {
           }
         },
       ),
-      // floatingActionButton: FloatingActionButton(
-      //   // 播放/暂停 按钮
-      //   onPressed: () {
-      //     setState(() {
-      //       if (_vpc.value.isPlaying) {
-      //         _vpc.pause();
-      //       } else {
-      //         _vpc.play();
-      //       }
-      //     });
-      //   },
-      //   child: Icon(
-      //     _vpc.value.isPlaying ? Icons.pause : Icons.play_arrow,
-      //   ),
-      // ),
-
-      // // 快进 按钮
-      // floatingActionButton: FloatingActionButton(
-      //   onPressed: () {
-      //     // print('####################################################################');
-      //     // print(_vpc.value.duration.inSeconds);
-      //     // print(_vpc.value.position.inSeconds);
-      //     // print(_vpc.value.duration.inSeconds ~/ 30);
-      //     // print('####################################################################');
-      //     setState(() {
-      //       if (_vpc.value.isPlaying) {
-      //         _vpc.seekTo(Duration(seconds: _vpc.value.position.inSeconds + _vpc.value.duration.inSeconds ~/ 40));
-      //       }
-      //     });
-      //   },
-      //   child: Icon(
-      //     Icons.arrow_forward,
-      //   ),
-      // ),
     );
   }
 }

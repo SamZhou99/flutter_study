@@ -36,6 +36,9 @@ dependencies:
   # 官方 视频播放器
   video_player:
 
+  # 屏幕保持常亮 开关
+  wakelock:
+
 dev_dependencies:
   flutter_test:
     sdk: flutter
