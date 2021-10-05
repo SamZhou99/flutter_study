@@ -20,7 +20,7 @@ class _HomePage01State extends State<HomePage01> {
   @override
   void initState() {
     super.initState();
-    getHttp(Golbal.listUrl);
+    getHttp(Golbal.listUrl.replaceAll('{page}', Golbal.pageNum.toString()));
   }
 
   @override
@@ -47,32 +47,22 @@ class _HomePage01State extends State<HomePage01> {
   // item 内容
   Widget getItemContainer(itemData) {
     return Container(
-      alignment: Alignment.center,
-      color: getRandomColor(),
-      child: Column(
-        children: [
-          Stack(
-            children: [
-              GestureDetector(
-                  child: Image.network(
-                    itemData['img'],
-                    fit: BoxFit.fitHeight,
-                  ),
-                  onTap: () {
-                    // showAlertDialog(context, itemData);
-                    Golbal.itemData = itemData;
-                    Navigator.push(context, MaterialPageRoute(builder: (context) => VideoPage()));
-                  }),
-              Positioned(
-                bottom: 0,
-                left: 0,
-                child: Text(itemData['title'], style: TextStyle(color: Colors.black, fontSize: 14)),
-              )
-            ],
-          )
-        ],
+        child: Column(children: [
+      GestureDetector(
+          child: Image.network(
+            itemData['img'],
+            fit: BoxFit.fitHeight,
+          ),
+          onTap: () {
+            Golbal.itemData = itemData;
+            Navigator.push(
+                context, MaterialPageRoute(builder: (context) => VideoPage()));
+          }),
+      SizedBox(
+        height: 3,
       ),
-    );
+      Text(itemData['title'], overflow: TextOverflow.ellipsis),
+    ]));
   }
 
   // 数据转成 widget 列表
@@ -83,18 +73,12 @@ class _HomePage01State extends State<HomePage01> {
   // item 列表
   Widget getItemList() {
     return GridView.count(
-      //水平子Widget之间间距
-      crossAxisSpacing: 10.0,
-      //垂直子Widget之间间距
-      mainAxisSpacing: 10.0,
-      //GridView内边距
-      padding: EdgeInsets.all(10.0),
-      //一行的Widget数量
-      crossAxisCount: 2,
-      //子Widget宽高比例
-      childAspectRatio: 16 / 9,
-      //子Widget列表
-      children: getWidgetList(),
+      crossAxisSpacing: 10.0, //水平子Widget之间间距
+      mainAxisSpacing: 10.0, //垂直子Widget之间间距
+      padding: EdgeInsets.all(10.0), //GridView内边距
+      crossAxisCount: 2, //一行的Widget数量
+      childAspectRatio: 16 / 11, //子Widget宽高比例
+      children: getWidgetList(), //子Widget列表
     );
   }
 
@@ -137,7 +121,10 @@ class _HomePage01State extends State<HomePage01> {
             title: Center(
                 child: Text(
               '标题',
-              style: TextStyle(color: Colors.black, fontSize: 20.0, fontWeight: FontWeight.bold),
+              style: TextStyle(
+                  color: Colors.black,
+                  fontSize: 20.0,
+                  fontWeight: FontWeight.bold),
             )),
             actions: <Widget>[
               IconButton(

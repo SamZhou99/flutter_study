@@ -13,14 +13,24 @@ class VideoPage extends StatefulWidget {
 class _VideoPageState extends State<VideoPage> {
   late VideoPlayerController _vpc;
   late Future<void> _initializeVideoPlayerFuture;
+  String _duraStr = '0.00';
+  int seekNum = 20;
 
-  @override
-  void initState() {
-    super.initState();
-    _vpc = VideoPlayerController.network(Golbal.itemData['video']);
-    _initializeVideoPlayerFuture = _vpc.initialize();
-    _vpc.setLooping(true);
-    Wakelock.enable();
+  // 进度百分比
+  void onProgress() {
+    if (!_vpc.value.hasError) {
+      setState(() {
+        //进度条的播放进度，用当前播放时间除视频总长度得到
+        _duraStr = (_vpc.value.position.inSeconds /
+                _vpc.value.duration.inSeconds *
+                100)
+            .toStringAsFixed(2);
+      });
+    }
+  }
+
+  // 播放与暂停
+  void onPlayPause() {
     setState(() {
       if (_vpc.value.isPlaying) {
         _vpc.pause();
@@ -30,9 +40,32 @@ class _VideoPageState extends State<VideoPage> {
     });
   }
 
+  // 跳转到
+  void onSeekTo() {
+    setState(() {
+      if (_vpc.value.isPlaying) {
+        _vpc.seekTo(Duration(
+            seconds: _vpc.value.position.inSeconds +
+                _vpc.value.duration.inSeconds ~/ seekNum));
+      }
+    });
+  }
+
+  @override
+  void initState() {
+    super.initState();
+    _vpc = VideoPlayerController.network(Golbal.itemData['video']);
+    _initializeVideoPlayerFuture = _vpc.initialize();
+    _vpc.setLooping(true);
+    _vpc.addListener(onProgress);
+    Wakelock.enable();
+    onPlayPause();
+  }
+
   @override
   void dispose() {
     Wakelock.disable();
+    _vpc.removeListener(onProgress);
     _vpc.dispose();
     super.dispose();
   }
@@ -65,31 +98,16 @@ class _VideoPageState extends State<VideoPage> {
                 Text('收藏'),
                 Text('评论'),
                 Text('聊天'),
-                ElevatedButton(
-                    onPressed: () {
-                      setState(() {
-                        if (_vpc.value.isPlaying) {
-                          _vpc.seekTo(Duration(seconds: _vpc.value.position.inSeconds + _vpc.value.duration.inSeconds ~/ 10));
-                        }
-                      });
-                    },
-                    child: Text('快进')),
-                ElevatedButton(
-                    onPressed: () {
-                      setState(() {
-                        if (_vpc.value.isPlaying) {
-                          _vpc.pause();
-                        } else {
-                          _vpc.play();
-                        }
-                      });
-                    },
-                    child: Text('播放/暂停')),
+                Text('$_duraStr%'),
+                ElevatedButton(onPressed: onSeekTo, child: Text('快进')),
+                ElevatedButton(onPressed: onPlayPause, child: Text('播放/暂停')),
               ],
             );
           } else {
             return const Center(
-              child: CircularProgressIndicator(backgroundColor: Colors.greenAccent, valueColor: AlwaysStoppedAnimation<Color>(Colors.pink)),
+              child: CircularProgressIndicator(
+                  backgroundColor: Colors.greenAccent,
+                  valueColor: AlwaysStoppedAnimation<Color>(Colors.pink)),
             );
           }
         },
