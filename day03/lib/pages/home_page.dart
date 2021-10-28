@@ -13,11 +13,21 @@ class HomePage extends StatefulWidget {
 class _HomePageState extends State<HomePage>
     with SingleTickerProviderStateMixin {
   late TabController _tabController;
+  var tabs = [
+    Tab(text: '推荐'),
+    Tab(text: '热门'),
+    Tab(text: '附近'),
+  ];
+  var tabViews = [
+    Center(child: HomePage01()),
+    Center(child: HomePage02()),
+    Center(child: HomePage03()),
+  ];
 
   @override
   void initState() {
     super.initState();
-    _tabController = new TabController(vsync: this, length: 3);
+    _tabController = new TabController(vsync: this, length: tabs.length);
   }
 
   @override
@@ -32,17 +42,9 @@ class _HomePageState extends State<HomePage>
         appBar: AppBar(
             title: Text("HomePage"),
             bottom: TabBar(
-              tabs: [
-                Tab(text: '推荐'),
-                Tab(text: '热门'),
-                Tab(text: '附近'),
-              ],
+              tabs: tabs,
               controller: _tabController,
             )),
-        body: TabBarView(controller: _tabController, children: <Widget>[
-          Center(child: HomePage01()),
-          Center(child: HomePage02()),
-          Center(child: HomePage03()),
-        ]));
+        body: TabBarView(controller: _tabController, children: tabViews));
   }
 }

@@ -41,12 +41,17 @@ class _VideoPageState extends State<VideoPage> {
   }
 
   // 跳转到
-  void onSeekTo() {
+  void onSeekTo(String stateStr) {
     setState(() {
+      int stepNum = _vpc.value.duration.inSeconds ~/ seekNum;
       if (_vpc.value.isPlaying) {
-        _vpc.seekTo(Duration(
-            seconds: _vpc.value.position.inSeconds +
-                _vpc.value.duration.inSeconds ~/ seekNum));
+        if (stateStr == "+") {
+          _vpc.seekTo(
+              Duration(seconds: _vpc.value.position.inSeconds + stepNum));
+        } else {
+          _vpc.seekTo(
+              Duration(seconds: _vpc.value.position.inSeconds - stepNum));
+        }
       }
     });
   }
@@ -99,7 +104,16 @@ class _VideoPageState extends State<VideoPage> {
                 Text('评论'),
                 Text('聊天'),
                 Text('$_duraStr%'),
-                ElevatedButton(onPressed: onSeekTo, child: Text('快进')),
+                ElevatedButton(
+                    onPressed: () {
+                      onSeekTo("+");
+                    },
+                    child: Text('快进')),
+                ElevatedButton(
+                    onPressed: () {
+                      onSeekTo("-");
+                    },
+                    child: Text('后退')),
                 ElevatedButton(onPressed: onPlayPause, child: Text('播放/暂停')),
               ],
             );

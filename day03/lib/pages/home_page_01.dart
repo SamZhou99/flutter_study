@@ -14,11 +14,16 @@ class HomePage01 extends StatefulWidget {
   _HomePage01State createState() => _HomePage01State();
 }
 
-class _HomePage01State extends State<HomePage01> {
+class _HomePage01State extends State<HomePage01>
+    with AutomaticKeepAliveClientMixin {
+  @override
+  bool get wantKeepAlive => true;
+
   var _item = [];
 
   @override
   void initState() {
+    print("_HomePage...   初始化....");
     super.initState();
     getHttp(Golbal.listUrl.replaceAll('{page}', Golbal.pageNum.toString()));
   }
@@ -30,6 +35,7 @@ class _HomePage01State extends State<HomePage01> {
 
   @override
   Widget build(BuildContext context) {
+    super.build(context);
     return Container(
       child: Center(child: getItemList()),
     );
@@ -47,22 +53,23 @@ class _HomePage01State extends State<HomePage01> {
   // item 内容
   Widget getItemContainer(itemData) {
     return Container(
+        color: Color.fromRGBO(230, 230, 230, 1),
         child: Column(children: [
-      GestureDetector(
-          child: Image.network(
-            itemData['img'],
-            fit: BoxFit.fitHeight,
+          GestureDetector(
+              child: Image.network(
+                itemData['img'],
+                fit: BoxFit.fitHeight,
+              ),
+              onTap: () {
+                Golbal.itemData = itemData;
+                Navigator.push(context,
+                    MaterialPageRoute(builder: (context) => VideoPage()));
+              }),
+          SizedBox(
+            height: 7,
           ),
-          onTap: () {
-            Golbal.itemData = itemData;
-            Navigator.push(
-                context, MaterialPageRoute(builder: (context) => VideoPage()));
-          }),
-      SizedBox(
-        height: 3,
-      ),
-      Text(itemData['title'], overflow: TextOverflow.ellipsis),
-    ]));
+          Text(itemData['title'], overflow: TextOverflow.ellipsis),
+        ]));
   }
 
   // 数据转成 widget 列表
@@ -77,7 +84,7 @@ class _HomePage01State extends State<HomePage01> {
       mainAxisSpacing: 10.0, //垂直子Widget之间间距
       padding: EdgeInsets.all(10.0), //GridView内边距
       crossAxisCount: 2, //一行的Widget数量
-      childAspectRatio: 16 / 11, //子Widget宽高比例
+      childAspectRatio: 16 / 12, //子Widget宽高比例
       children: getWidgetList(), //子Widget列表
     );
   }
